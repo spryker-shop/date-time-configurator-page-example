@@ -5,7 +5,7 @@
  * For full license information, please view the LICENSE file that was distributed with this source code.
  */
 
-namespace SprykerTest\Yves\DateTimeConfiguratorPageExample\Business;
+namespace SprykerTest\Yves\DateTimeConfiguratorPageExample\Plugin;
 
 use Codeception\Test\Unit;
 use SprykerShop\Yves\DateTimeConfiguratorPageExample\Plugin\Application\ConfiguratorSecurityHeaderExpanderPlugin;
@@ -17,7 +17,7 @@ use SprykerTest\Yves\DateTimeConfiguratorPageExample\DateTimeConfiguratorPageExa
  * @group SprykerTest
  * @group Yves
  * @group DateTimeConfiguratorPageExample
- * @group Business
+ * @group Plugin
  * @group ConfiguratorSecurityHeaderExpanderPluginTest
  * Add your own group annotations below this line
  */

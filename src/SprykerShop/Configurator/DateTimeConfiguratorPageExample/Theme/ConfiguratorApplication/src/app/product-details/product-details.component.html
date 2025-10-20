@@ -9,15 +9,15 @@
             </div>
 
             <span class="details__text" data-qa="product-details-sku">
-                {{ 'details.sku' | translate: { value: data.configurator.sku } }}
+                {{ 'details.sku' | translate : { value: data.configurator.sku } }}
             </span>
 
             <span class="details__quantity" data-qa="product-details-quantity">
-                {{ 'details.quantity' | translate: { value: data.product.quantity } }}
+                {{ 'details.quantity' | translate : { value: data.product.quantity } }}
             </span>
 
             <span class="details__price" data-qa="product-details-price">
-                {{ data.configurator.price | configurePrice | currency: data.configurator.currency_code }}
+                {{ data.configurator.price | configurePrice | currency : data.configurator.currency_code }}
                 {{ data.configurator.currency_code }}
             </span>
 
@@ -48,7 +48,7 @@
                     <circle cx="256" cy="162.84" r="27" />
                 </svg>
                 <span class="notification__details">
-                    {{ 'product.availableQuantity' | translate: { value: data.configurator.available_quantity } }}
+                    {{ 'product.availableQuantity' | translate : { value: data.configurator.available_quantity } }}
                 </span>
             </div>
 
