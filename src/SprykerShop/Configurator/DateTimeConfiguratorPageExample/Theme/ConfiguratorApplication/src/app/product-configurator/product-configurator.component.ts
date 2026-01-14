@@ -5,12 +5,16 @@ import { ProductService } from 'src/services/product.service';
 import { ConfiguratorService } from '../../services/configurator.service';
 
 @Component({
+    standalone: false,
     selector: 'app-product-configurator',
     templateUrl: './product-configurator.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProductConfiguratorComponent implements OnInit {
-    constructor(private productService: ProductService, private configuratorService: ConfiguratorService) {}
+    constructor(
+        private productService: ProductService,
+        private configuratorService: ConfiguratorService,
+    ) {}
 
     @ViewChild('form') form: ElementRef<HTMLFormElement>;
 

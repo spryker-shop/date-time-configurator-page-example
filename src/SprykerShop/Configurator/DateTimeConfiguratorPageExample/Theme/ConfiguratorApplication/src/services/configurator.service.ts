@@ -22,7 +22,10 @@ const CONFIGURATOR = !environment.production ? `${ASSETS}/assets/data/configurat
 
 @Injectable({ providedIn: 'root' })
 export class ConfiguratorService {
-    constructor(private http: HttpClient, private product: ProductService) {}
+    constructor(
+        private http: HttpClient,
+        private product: ProductService,
+    ) {}
 
     configuration$ = this.http.get<MockConfigurator>(CONFIGURATOR).pipe(shareReplay({ bufferSize: 1, refCount: true }));
 

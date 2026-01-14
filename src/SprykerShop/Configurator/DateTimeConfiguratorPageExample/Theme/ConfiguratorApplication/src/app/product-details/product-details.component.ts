@@ -4,6 +4,7 @@ import { ConfiguratorService } from 'src/services/configurator.service';
 import { ProductConfiguratorComponent } from '../product-configurator/product-configurator.component';
 
 @Component({
+    standalone: false,
     selector: 'app-product-details',
     templateUrl: './product-details.component.html',
     styleUrls: ['./product-details.component.scss'],

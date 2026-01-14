@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
+    standalone: false,
     selector: 'app-configurator-item',
     templateUrl: './configurator-item.component.html',
     styleUrls: ['./configurator-item.component.scss'],

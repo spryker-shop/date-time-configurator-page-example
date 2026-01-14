@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from 
 import { MockData, MockDataItem } from 'src/services/types';
 
 @Component({
+    standalone: false,
     selector: 'app-configurator-group',
     templateUrl: './configurator-group.component.html',
     styleUrls: ['./configurator-group.component.scss'],

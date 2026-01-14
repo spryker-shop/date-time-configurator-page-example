@@ -8,7 +8,10 @@ import { ProductData, ProductMetaData } from './types';
 
 @Injectable({ providedIn: 'root' })
 export class ProductService {
-    constructor(private http: HttpClient, private translate: TranslateService) {
+    constructor(
+        private http: HttpClient,
+        private translate: TranslateService,
+    ) {
         translate.addLangs(['en_US', 'de_DE']);
         translate.setDefaultLang('en_US');
     }

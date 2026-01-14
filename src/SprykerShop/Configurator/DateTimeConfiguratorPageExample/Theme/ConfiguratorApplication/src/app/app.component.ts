@@ -4,6 +4,7 @@ import { map } from 'rxjs';
 import { ConfiguratorService } from '../services/configurator.service';
 
 @Component({
+    standalone: false,
     selector: 'app-root',
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.scss'],

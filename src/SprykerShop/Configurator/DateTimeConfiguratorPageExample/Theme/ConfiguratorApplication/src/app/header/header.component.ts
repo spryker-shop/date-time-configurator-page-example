@@ -4,13 +4,17 @@ import { ConfiguratorService } from 'src/services/configurator.service';
 import { ProductService } from 'src/services/product.service';
 
 @Component({
+    standalone: false,
     selector: 'app-header',
     templateUrl: './header.component.html',
     styleUrls: ['./header.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeaderComponent {
-    constructor(protected data: ProductService, protected configuration: ConfiguratorService) {}
+    constructor(
+        protected data: ProductService,
+        protected configuration: ConfiguratorService,
+    ) {}
 
     title$ = this.configuration.productData$.pipe(map((data) => data.name));
     logo$ = this.configuration.productData$.pipe(map((data) => data.logo));

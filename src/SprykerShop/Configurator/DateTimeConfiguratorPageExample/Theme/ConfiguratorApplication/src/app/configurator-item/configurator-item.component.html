@@ -10,13 +10,13 @@
         />
         <ng-content></ng-content>
         <span data-qa="configurator-item-price" class="tile__price"
-            >+ {{ price | configurePrice | currency : currency }}</span
+            >+ {{ price | configurePrice | currency: currency }}</span
         >
     </label>
 
     @if (withTooltip()) {
-    <div data-qa="configurator-item-tooltip" class="tooltip__content">
-        {{ disabled }}
-    </div>
+        <div data-qa="configurator-item-tooltip" class="tooltip__content">
+            {{ disabled }}
+        </div>
     }
 </div>
