@@ -35,9 +35,6 @@ class ConfiguratorSecurityHeaderExpanderPluginTest extends Unit
      */
     protected DateTimeConfiguratorPageExampleTester $tester;
 
-    /**
-     * @return void
-     */
     public function testExpandHeaderWithConfiguratorUrlAtTheEndOfTheLine(): void
     {
         // Arrange
@@ -54,9 +51,6 @@ class ConfiguratorSecurityHeaderExpanderPluginTest extends Unit
         $this->assertStringContainsString($this->tester->getConfiguratorUrl(), $securityHeaders[static::HEADER_CONTENT_SECURITY_POLICY]);
     }
 
-    /**
-     * @return void
-     */
     public function testExpandHeaderWithConfiguratorUrlAtTheBeginningOfTheLine(): void
     {
         // Arrange
@@ -73,9 +67,6 @@ class ConfiguratorSecurityHeaderExpanderPluginTest extends Unit
         $this->assertStringContainsString($this->tester->getConfiguratorUrl(), $securityHeaders[static::HEADER_CONTENT_SECURITY_POLICY]);
     }
 
-    /**
-     * @return void
-     */
     public function testExpandHeaderWithConfiguratorUrlInTheMiddleOfTheLine(): void
     {
         // Arrange
@@ -92,9 +83,6 @@ class ConfiguratorSecurityHeaderExpanderPluginTest extends Unit
         $this->assertStringContainsString($this->tester->getConfiguratorUrl(), $securityHeaders[static::HEADER_CONTENT_SECURITY_POLICY]);
     }
 
-    /**
-     * @return void
-     */
     public function testDoNothingWithoutContentSecurityPolicyHeader(): void
     {
         // Arrange
@@ -112,9 +100,6 @@ class ConfiguratorSecurityHeaderExpanderPluginTest extends Unit
         $this->assertArrayNotHasKey(static::HEADER_CONTENT_SECURITY_POLICY, $securityHeaders);
     }
 
-    /**
-     * @return void
-     */
     public function testDoNothingWithoutFormActionAttribute(): void
     {
         // Arrange

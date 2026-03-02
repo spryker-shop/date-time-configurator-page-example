@@ -51,9 +51,6 @@ class ConfiguratorSecurityHeaderExpanderPlugin implements SecurityHeaderExpander
         return $securityHeaders;
     }
 
-    /**
-     * @return string
-     */
     protected function createConfiguratorUrl(): string
     {
         return sprintf(

@@ -27,11 +27,6 @@ class DateTimeConfiguratorPageExampleDependencyProvider extends AbstractBundleDe
      */
     public const SYMFONY_FILE_SYSTEM = 'SYMFONY_FILE_SYSTEM';
 
-    /**
-     * @param \Spryker\Zed\Kernel\Container $container
-     *
-     * @return \Spryker\Zed\Kernel\Container
-     */
     public function provideBusinessLayerDependencies(Container $container): Container
     {
         $container = parent::provideBusinessLayerDependencies($container);
@@ -42,11 +37,6 @@ class DateTimeConfiguratorPageExampleDependencyProvider extends AbstractBundleDe
         return $container;
     }
 
-    /**
-     * @param \Spryker\Zed\Kernel\Container $container
-     *
-     * @return \Spryker\Zed\Kernel\Container
-     */
     protected function addFilesystem(Container $container): Container
     {
         $container->set(static::SYMFONY_FILE_SYSTEM, function () {
@@ -56,19 +46,11 @@ class DateTimeConfiguratorPageExampleDependencyProvider extends AbstractBundleDe
         return $container;
     }
 
-    /**
-     * @return \Symfony\Component\Filesystem\Filesystem
-     */
     protected function createFilesystem(): Filesystem
     {
         return new Filesystem();
     }
 
-    /**
-     * @param \Spryker\Zed\Kernel\Container $container
-     *
-     * @return \Spryker\Zed\Kernel\Container
-     */
     protected function addAvailabilityFacade(Container $container): Container
     {
         $container->set(static::FACADE_AVAILABILITY, function (Container $container) {

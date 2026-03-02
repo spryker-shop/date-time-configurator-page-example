@@ -77,9 +77,6 @@ class ConfiguratorPage
         return $this->renderHtmlPageAction();
     }
 
-    /**
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
     protected function createTokenAction(): Response
     {
         $productConfiguratorPageResponseTransfer = new ProductConfiguratorPageResponseTransfer();
@@ -104,9 +101,6 @@ class ConfiguratorPage
         return new JsonResponse($productConfiguratorPageResponseTransfer->toArray(), Response::HTTP_OK);
     }
 
-    /**
-     * @return string
-     */
     protected function renderHtmlPageAction(): string
     {
         return file_get_contents(
@@ -114,9 +108,6 @@ class ConfiguratorPage
         );
     }
 
-    /**
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
     protected function getRequestDataByTokenAction(): Response
     {
         return new JsonResponse(
@@ -125,9 +116,6 @@ class ConfiguratorPage
         );
     }
 
-    /**
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
     protected function prepareConfigurationResponseAction(): Response
     {
         $productConfiguration = $this->request->request->all() ?: [];
@@ -144,9 +132,6 @@ class ConfiguratorPage
         );
     }
 
-    /**
-     * @return array
-     */
     protected function getDataFromSession(): array
     {
         $this->session->setId($this->request->get(static::REQUEST_PARAMETER_GET_CONFIGURATION_BY_TOKEN));
@@ -155,9 +140,6 @@ class ConfiguratorPage
         return $this->session->get(static::CONFIGURATOR_SESSION_KEY, []);
     }
 
-    /**
-     * @return string
-     */
     protected function createConfiguratorRedirectUrl(): string
     {
         return sprintf(

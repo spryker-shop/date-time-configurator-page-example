@@ -89,9 +89,6 @@ class DateTimeConfiguratorPageExampleFacadeTest extends Unit
      */
     protected $tester;
 
-    /**
-     * @return void
-     */
     public function setUp(): void
     {
         parent::setUp();
@@ -112,9 +109,6 @@ class DateTimeConfiguratorPageExampleFacadeTest extends Unit
             ->setFactory($dateTimeConfiguratorPageExampleFactoryMock);
     }
 
-    /**
-     * @return void
-     */
     public function testFindProductConcreteAvailabilityWillReturnNullWhenAvailabilityNotSet(): void
     {
         //Arrange
@@ -137,9 +131,6 @@ class DateTimeConfiguratorPageExampleFacadeTest extends Unit
         $this->assertNull($productConcreteAvailabilityTransfer);
     }
 
-    /**
-     * @return void
-     */
     public function testFindProductConcreteAvailabilityWillReturnProductConcreteAvailabilityWhenConfiguratorAvailabilityNotSet(): void
     {
         //Arrange
@@ -170,9 +161,6 @@ class DateTimeConfiguratorPageExampleFacadeTest extends Unit
         );
     }
 
-    /**
-     * @return void
-     */
     public function testFindProductConcreteAvailabilityWillReturnConfiguratorAvailabilityWhenConfiguratorAvailabilitySetAndNoConcreteAvailability(): void
     {
         //Arrange
@@ -201,9 +189,6 @@ class DateTimeConfiguratorPageExampleFacadeTest extends Unit
         );
     }
 
-    /**
-     * @return void
-     */
     public function testFindProductConcreteAvailabilityWillIgnoreConcreteAvailabilityWhenBothAvailabilitySet(): void
     {
         //Arrange
@@ -237,9 +222,6 @@ class DateTimeConfiguratorPageExampleFacadeTest extends Unit
         );
     }
 
-    /**
-     * @return void
-     */
     public function testFindProductConcreteAvailabilityWillReturnNullWhenProductAvailabilityCriteriaNull(): void
     {
         //Arrange

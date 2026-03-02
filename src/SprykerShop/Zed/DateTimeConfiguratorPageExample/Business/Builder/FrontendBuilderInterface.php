@@ -11,10 +11,5 @@ use Psr\Log\LoggerInterface;
 
 interface FrontendBuilderInterface
 {
-    /**
-     * @param \Psr\Log\LoggerInterface $logger
-     *
-     * @return bool
-     */
     public function build(LoggerInterface $logger): bool;
 }

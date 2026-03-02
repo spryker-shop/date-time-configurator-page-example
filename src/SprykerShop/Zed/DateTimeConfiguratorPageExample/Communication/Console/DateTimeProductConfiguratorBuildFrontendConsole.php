@@ -26,9 +26,6 @@ class DateTimeProductConfiguratorBuildFrontendConsole extends Console
      */
     public const DESCRIPTION = 'This command will build Product Configurator frontend.';
 
-    /**
-     * @return void
-     */
     protected function configure(): void
     {
         $this->setName(static::COMMAND_NAME);
@@ -37,12 +34,6 @@ class DateTimeProductConfiguratorBuildFrontendConsole extends Console
         parent::configure();
     }
 
-    /**
-     * @param \Symfony\Component\Console\Input\InputInterface $input
-     * @param \Symfony\Component\Console\Output\OutputInterface $output
-     *
-     * @return int
-     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->info('Build Product Configurator frontend');

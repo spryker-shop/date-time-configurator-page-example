@@ -19,21 +19,11 @@ class ProductConcreteAvailabilityReader implements ProductConcreteAvailabilityRe
      */
     protected $availabilityFacade;
 
-    /**
-     * @param \SprykerShop\Zed\DateTimeConfiguratorPageExample\Dependency\Facade\DateTimeConfiguratorPageExampleToAvailabilityFacadeInterface $availabilityFacade
-     */
     public function __construct(DateTimeConfiguratorPageExampleToAvailabilityFacadeInterface $availabilityFacade)
     {
         $this->availabilityFacade = $availabilityFacade;
     }
 
-    /**
-     * @param string $sku
-     * @param \Generated\Shared\Transfer\StoreTransfer $storeTransfer
-     * @param \Generated\Shared\Transfer\ProductAvailabilityCriteriaTransfer|null $productAvailabilityCriteriaTransfer
-     *
-     * @return \Generated\Shared\Transfer\ProductConcreteAvailabilityTransfer|null
-     */
     public function findProductConcreteAvailabilityForStore(
         string $sku,
         StoreTransfer $storeTransfer,
@@ -46,13 +36,6 @@ class ProductConcreteAvailabilityReader implements ProductConcreteAvailabilityRe
         return $this->resolveProductConfigurationAvailability($sku, $storeTransfer, $productAvailabilityCriteriaTransfer);
     }
 
-    /**
-     * @param string $sku
-     * @param \Generated\Shared\Transfer\StoreTransfer $storeTransfer
-     * @param \Generated\Shared\Transfer\ProductAvailabilityCriteriaTransfer $productAvailabilityCriteriaTransfer
-     *
-     * @return \Generated\Shared\Transfer\ProductConcreteAvailabilityTransfer|null
-     */
     protected function resolveProductConfigurationAvailability(
         string $sku,
         StoreTransfer $storeTransfer,
@@ -99,11 +82,6 @@ class ProductConcreteAvailabilityReader implements ProductConcreteAvailabilityRe
             ->setSku($sku);
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\ProductAvailabilityCriteriaTransfer $productAvailabilityCriteriaTransfer
-     *
-     * @return \Generated\Shared\Transfer\ProductAvailabilityCriteriaTransfer
-     */
     protected function createProductAvailabilityCriteriaCopyWithoutProductConfigurationInstance(
         ProductAvailabilityCriteriaTransfer $productAvailabilityCriteriaTransfer
     ): ProductAvailabilityCriteriaTransfer {

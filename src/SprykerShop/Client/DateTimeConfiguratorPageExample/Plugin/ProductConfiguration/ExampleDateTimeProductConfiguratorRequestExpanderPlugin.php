@@ -13,20 +13,12 @@ use Spryker\Client\ProductConfigurationExtension\Dependency\Plugin\ProductConfig
 
 class ExampleDateTimeProductConfiguratorRequestExpanderPlugin extends AbstractPlugin implements ProductConfiguratorRequestExpanderPluginInterface
 {
-    /**
-     * @param \Generated\Shared\Transfer\ProductConfiguratorRequestTransfer $productConfiguratorRequestTransfer
-     *
-     * @return \Generated\Shared\Transfer\ProductConfiguratorRequestTransfer
-     */
     public function expand(
         ProductConfiguratorRequestTransfer $productConfiguratorRequestTransfer
     ): ProductConfiguratorRequestTransfer {
         return $productConfiguratorRequestTransfer->setAccessTokenRequestUrl($this->createConfiguratorUrl());
     }
 
-    /**
-     * @return string
-     */
     protected function createConfiguratorUrl(): string
     {
         return sprintf(

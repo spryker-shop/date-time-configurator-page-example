@@ -29,9 +29,6 @@ class DateTimeConfiguratorPageExampleTester extends Actor
 {
     use _generated\DateTimeConfiguratorPageExampleTesterActions;
 
-    /**
-     * @return string
-     */
     public function getConfiguratorUrl(): string
     {
         return sprintf(

@@ -26,13 +26,6 @@ class DateTimeConfiguratorPageExampleToAvailabilityFacadeBridge implements DateT
         $this->availabilityFacade = $availabilityFacade;
     }
 
-    /**
-     * @param string $sku
-     * @param \Generated\Shared\Transfer\StoreTransfer $storeTransfer
-     * @param \Generated\Shared\Transfer\ProductAvailabilityCriteriaTransfer|null $productAvailabilityCriteriaTransfer
-     *
-     * @return \Generated\Shared\Transfer\ProductConcreteAvailabilityTransfer|null
-     */
     public function findOrCreateProductConcreteAvailabilityBySkuForStore(
         string $sku,
         StoreTransfer $storeTransfer,

@@ -21,33 +21,21 @@ use Symfony\Component\Filesystem\Filesystem;
  */
 class DateTimeConfiguratorPageExampleBusinessFactory extends AbstractBusinessFactory
 {
-    /**
-     * @return \SprykerShop\Zed\DateTimeConfiguratorPageExample\Business\Reader\ProductConcreteAvailabilityReaderInterface
-     */
     public function createProductConcreteAvailabilityReader(): ProductConcreteAvailabilityReaderInterface
     {
         return new ProductConcreteAvailabilityReader($this->getAvailabilityFacade());
     }
 
-    /**
-     * @return \SprykerShop\Zed\DateTimeConfiguratorPageExample\Business\Builder\FrontendBuilderInterface
-     */
     public function createProductConfiguratorFrontendBuilder(): FrontendBuilderInterface
     {
         return new FrontendBuilder($this->getFileSystem(), $this->getConfig());
     }
 
-    /**
-     * @return \SprykerShop\Zed\DateTimeConfiguratorPageExample\Dependency\Facade\DateTimeConfiguratorPageExampleToAvailabilityFacadeInterface
-     */
     public function getAvailabilityFacade(): DateTimeConfiguratorPageExampleToAvailabilityFacadeInterface
     {
         return $this->getProvidedDependency(DateTimeConfiguratorPageExampleDependencyProvider::FACADE_AVAILABILITY);
     }
 
-    /**
-     * @return \Symfony\Component\Filesystem\Filesystem
-     */
     public function getFileSystem(): Filesystem
     {
         return $this->getProvidedDependency(DateTimeConfiguratorPageExampleDependencyProvider::SYMFONY_FILE_SYSTEM);

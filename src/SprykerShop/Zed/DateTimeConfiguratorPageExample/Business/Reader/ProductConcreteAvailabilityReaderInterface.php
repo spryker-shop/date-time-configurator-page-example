@@ -13,13 +13,6 @@ use Generated\Shared\Transfer\StoreTransfer;
 
 interface ProductConcreteAvailabilityReaderInterface
 {
-    /**
-     * @param string $sku
-     * @param \Generated\Shared\Transfer\StoreTransfer $storeTransfer
-     * @param \Generated\Shared\Transfer\ProductAvailabilityCriteriaTransfer|null $productAvailabilityCriteriaTransfer
-     *
-     * @return \Generated\Shared\Transfer\ProductConcreteAvailabilityTransfer|null
-     */
     public function findProductConcreteAvailabilityForStore(
         string $sku,
         StoreTransfer $storeTransfer,
