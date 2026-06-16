@@ -1,8 +1,6 @@
 @if (loading$ | async) {
-    <div>
-        <div class="loader">
-            <div>{{ 'global.loading' | translate }}...</div>
-        </div>
+    <div class="loader">
+        <div>{{ 'global.loading' | translate }}...</div>
     </div>
 } @else {
     <app-header></app-header>

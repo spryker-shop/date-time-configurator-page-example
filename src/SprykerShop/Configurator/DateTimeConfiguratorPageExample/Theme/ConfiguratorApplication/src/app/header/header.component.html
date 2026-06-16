@@ -23,7 +23,7 @@
 <div class="header__bottom">
     <div class="container">
         <ul class="header__info">
-            @for (item of info$ | async; track item) {
+            @for (item of info$ | async; track item.title) {
                 @if (item.value) {
                     <li data-qa="header-info-item" class="header__info-item">
                         <h4 class="header__info-title">{{ item.title | translate }}:</h4>

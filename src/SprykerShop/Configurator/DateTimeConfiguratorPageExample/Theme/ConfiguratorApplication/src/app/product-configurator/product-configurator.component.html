@@ -1,12 +1,12 @@
 <ng-container>
     @if (productData$ | async; as productData) {
         <form #form method="post" [action]="productData.submit_url">
-            @for (group of data$ | async; track group) {
+            @for (group of data$ | async; track group.id) {
                 <app-configurator-group
                     [group]="group"
                     [configuration]="productData.configuration"
                     [currency]="productData.currency_code"
-                    (onChange)="onConfigurationChange($event, group.id)"
+                    (selectionChange)="onConfigurationChange($event, group.id)"
                 ></app-configurator-group>
             }
 
@@ -47,17 +47,21 @@
             @if (productData.price) {
                 <input
                     type="hidden"
-                    name="productConfigurationInstance[prices][{{ productData.currency_code }}][priceData]"
+                    [attr.name]="'productConfigurationInstance[prices][' + productData.currency_code + '][priceData]'"
                     [value]="productData.volume_prices | json"
                 />
                 <input
                     type="hidden"
-                    name="productConfigurationInstance[prices][{{ productData.currency_code }}][GROSS_MODE][DEFAULT]"
+                    [attr.name]="
+                        'productConfigurationInstance[prices][' + productData.currency_code + '][GROSS_MODE][DEFAULT]'
+                    "
                     [value]="productData.price"
                 />
                 <input
                     type="hidden"
-                    name="productConfigurationInstance[prices][{{ productData.currency_code }}][NET_MODE][DEFAULT]"
+                    [attr.name]="
+                        'productConfigurationInstance[prices][' + productData.currency_code + '][NET_MODE][DEFAULT]'
+                    "
                     [value]="productData.price"
                 />
             }

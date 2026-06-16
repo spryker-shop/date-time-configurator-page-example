@@ -1,20 +1,20 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { map, Subject, withLatestFrom } from 'rxjs';
-import { ConfiguratorService } from 'src/services/configurator.service';
-import { ProductService } from 'src/services/product.service';
+import { AsyncPipe } from '@angular/common';
+import { Subject } from 'rxjs';
+import { map, tap, withLatestFrom } from 'rxjs/operators';
+import { TranslatePipe } from '@ngx-translate/core';
+import { ConfiguratorService } from '../../services/configurator.service';
 
 @Component({
-    standalone: false,
     selector: 'app-header',
     templateUrl: './header.component.html',
-    styleUrls: ['./header.component.scss'],
+    styleUrl: './header.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [AsyncPipe, TranslatePipe],
 })
 export class HeaderComponent {
-    constructor(
-        protected data: ProductService,
-        protected configuration: ConfiguratorService,
-    ) {}
+    constructor(protected configuration: ConfiguratorService) {}
 
     title$ = this.configuration.productData$.pipe(map((data) => data.name));
     logo$ = this.configuration.productData$.pipe(map((data) => data.logo));
@@ -45,21 +45,16 @@ export class HeaderComponent {
     modalTrigger$ = new Subject<boolean>();
     modal$ = this.modalTrigger$.pipe(
         withLatestFrom(this.configuration.dirty$),
-        map(([status, dirty]) => {
+        tap(([status, dirty]) => {
             if (!dirty && status) {
-                return this.backTrigger();
+                this.backTrigger();
+
+                return;
             }
 
-            if (status) {
-                document.documentElement.style.height = '100%';
-                document.documentElement.style.overflow = 'hidden';
-            } else {
-                document.documentElement.style.height = '';
-                document.documentElement.style.overflow = '';
-            }
-
-            return status;
+            this.setScrollLock(status);
         }),
+        map(([status, dirty]) => dirty && status),
     );
 
     modalTrigger(event: Event, value: boolean): void {
@@ -69,5 +64,10 @@ export class HeaderComponent {
 
     backTrigger(): void {
         history.back();
+    }
+
+    private setScrollLock(locked: boolean): void {
+        document.documentElement.style.height = locked ? '100%' : '';
+        document.documentElement.style.overflow = locked ? 'hidden' : '';
     }
 }

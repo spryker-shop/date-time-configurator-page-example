@@ -15,10 +15,26 @@ import {
 } from 'rxjs';
 import { environment } from '../environments/environment';
 import { ProductService } from './product.service';
-import { ConfiguredProduct, MockConfigurator, MockDataItem, MockVolumePricesConfig, ServerData } from './types';
+import {
+    ConfiguredProduct,
+    CurrencyPrices,
+    MockConfigurator,
+    MockDataItem,
+    MockVolumePricesConfig,
+    ServerData,
+} from './types';
+
+const FALLBACK_CURRENCY = 'EUR';
 
 export const ASSETS = !environment.production ? '' : './dist';
 const CONFIGURATOR = !environment.production ? `${ASSETS}/assets/data/configurator.json` : './configurator.json';
+
+// Glossary shipped inside the application bundle.
+export const APP_I18N_PREFIX = `${ASSETS}/assets/i18n/`;
+
+// Optional project glossary located next to configurator.json. Keys defined here
+// override the bundled glossary, letting projects extend translations without a rebuild.
+export const PROJECT_I18N_PREFIX = !environment.production ? `${ASSETS}/assets/data/i18n/` : './i18n/';
 
 @Injectable({ providedIn: 'root' })
 export class ConfiguratorService {
@@ -27,14 +43,16 @@ export class ConfiguratorService {
         private product: ProductService,
     ) {}
 
-    configuration$ = this.http.get<MockConfigurator>(CONFIGURATOR).pipe(shareReplay({ bufferSize: 1, refCount: true }));
+    readonly configuration$ = this.http
+        .get<MockConfigurator>(CONFIGURATOR)
+        .pipe(shareReplay({ bufferSize: 1, refCount: true }));
 
-    data$ = this.configuration$.pipe(
+    readonly data$ = this.configuration$.pipe(
         map((data) => data.configuration),
         shareReplay({ bufferSize: 1, refCount: true }),
     );
-    defaults$ = this.configuration$.pipe(map((data) => data.defaults));
-    productData$ = this.configuration$.pipe(
+    readonly defaults$ = this.configuration$.pipe(map((data) => data.defaults));
+    readonly productData$ = this.configuration$.pipe(
         withLatestFrom(this.product.getData()),
         map(([data, product]) => ({
             ...data.data,
@@ -43,14 +61,13 @@ export class ConfiguratorService {
         shareReplay({ bufferSize: 1, refCount: true }),
     );
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    setConfigurator$ = new BehaviorSubject<Partial<Record<string, any>>>({});
+    private setConfigurator$ = new BehaviorSubject<Partial<ConfiguredProduct>>({});
 
-    configurator$: Observable<ConfiguredProduct & { price: number }> = this.product.getData().pipe(
-        switchMap((_data: ServerData) => {
-            const data = this.generateConfiguredData(_data);
+    readonly configurator$: Observable<ConfiguredProduct & { price: number }> = this.product.getData().pipe(
+        switchMap((data: ServerData) => {
+            const configuredData = this.generateConfiguredData(data);
             return this.setConfigurator$.pipe(
-                startWith(data),
+                startWith(configuredData),
                 scan((config, newConfig) => ({
                     ...config,
                     ...newConfig,
@@ -63,42 +80,48 @@ export class ConfiguratorService {
                 map(([configurator, config]) => {
                     const {
                         defaults,
-                        configuration: data,
-                        data: { defaultPrice = 0 },
+                        configuration: configurationData,
+                        data: { defaultPrice },
                         volumePrices,
                     } = config;
 
+                    const currency = configurator.currency_code;
+
                     configurator.configuration = {
                         ...defaults,
-                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                        ...(configurator.configuration as Record<string, any>),
+                        ...(configurator.configuration as Record<string, string>),
                     };
                     configurator.display_data = {};
                     configurator.available_quantity = null;
 
                     this.assignVolumePrices(configurator, volumePrices);
 
-                    configurator.price = Object.entries(configurator.configuration).reduce((price, [key, value]) => {
-                        const config = data.find((configs) => configs.id === key);
-                        const active = config?.data?.find((options) => options.value === value);
-                        const uncheck = active?.disabled
-                            ? Object.entries(active.disabled).some(([key, value]) =>
-                                  (value.condition as string[]).includes(configurator.configuration[key]),
-                              )
-                            : null;
-                        this.assignAvailability(active, configurator);
+                    configurator.price = Object.entries(configurator.configuration).reduce(
+                        (price, [key, value]) => {
+                            const entry = configurationData.find((configs) => configs.id === key);
+                            const active = entry?.data?.find((options) => options.value === value);
+                            const uncheck = active?.disabled
+                                ? Object.entries(active.disabled).some(([disabledKey, disabledValue]) =>
+                                      (disabledValue.condition as string[]).includes(
+                                          configurator.configuration[disabledKey],
+                                      ),
+                                  )
+                                : null;
+                            this.assignAvailability(active, configurator);
 
-                        if (uncheck) {
-                            delete configurator.configuration[key];
-                            delete configurator.display_data[config.label];
-                        }
+                            if (uncheck) {
+                                delete configurator.configuration[key];
+                                delete configurator.display_data[entry.label];
+                            }
 
-                        if (active && !uncheck) {
-                            configurator.display_data[config.label] = active.title;
-                        }
+                            if (active && !uncheck) {
+                                configurator.display_data[entry.label] = active.title;
+                            }
 
-                        return active && !uncheck ? active.price + price : price;
-                    }, defaultPrice);
+                            return active && !uncheck ? this.resolvePrice(active.price, currency) + price : price;
+                        },
+                        this.resolvePrice(defaultPrice, currency),
+                    );
 
                     return { ...configurator } as ConfiguredProduct & { price: number };
                 }),
@@ -106,44 +129,61 @@ export class ConfiguratorService {
         }),
         shareReplay({ bufferSize: 1, refCount: true }),
     );
-    loading$ = merge(this.product.getData().pipe(map(() => true)), this.configurator$.pipe(map(() => false))).pipe(
-        startWith(true),
-    );
-    dirty$ = combineLatest([this.configurator$, this.defaults$]).pipe(
+    readonly loading$ = merge(
+        this.product.getData().pipe(map(() => true)),
+        this.configurator$.pipe(map(() => false)),
+    ).pipe(startWith(true));
+    readonly dirty$ = combineLatest([this.configurator$, this.defaults$]).pipe(
         map(([data, defaults]) => JSON.stringify(data.configuration) !== JSON.stringify(defaults)),
     );
 
     private generateConfiguredData(response: ServerData): ConfiguredProduct {
-        const configuration = response.configuration.length ? JSON.parse(response.configuration) : {};
-        const displayData = response.display_data.length ? JSON.parse(response.display_data) : {};
-        const productData = {
-            ...response,
-            ...({
-                configuration,
-                display_data: displayData,
-            } as ConfiguredProduct),
-        };
-
         return {
-            ...productData,
+            ...response,
+            configuration: this.parseJsonObject(response.configuration),
+            display_data: this.parseJsonObject(response.display_data),
             price: 0,
+            available_quantity: null,
         };
     }
 
-    updateConfiguratorConfiguration(data: Record<string, unknown>) {
+    /**
+     * Server data delivers `configuration` and `display_data` as JSON strings, but either
+     * may be absent or empty. Resolves any non-parseable input to an empty object so the
+     * configurator can still render.
+     */
+    private parseJsonObject(value: string | undefined | null): Record<string, string> {
+        if (!value) {
+            return {};
+        }
+
+        try {
+            return JSON.parse(value);
+        } catch {
+            return {};
+        }
+    }
+
+    updateConfiguratorConfiguration(data: Record<string, string>): void {
         this.setConfigurator$.next({
             configuration: data,
         });
     }
 
-    updateWithGeneratedProductData(newProductData): void {
+    updateWithGeneratedProductData(newProductData: Partial<ConfiguredProduct>): void {
         this.setConfigurator$.next(newProductData);
     }
 
-    remove(propertyName: string, productData: ConfiguredProduct): void {
-        delete productData[propertyName];
+    /**
+     * Resolves a per-currency price map to a single amount for the active currency.
+     * Falls back to EUR, then to the first available currency, then to 0.
+     */
+    private resolvePrice(prices: CurrencyPrices | undefined, currency: string): number {
+        if (!prices) {
+            return 0;
+        }
 
-        this.updateWithGeneratedProductData(productData);
+        return prices[currency] ?? prices[FALLBACK_CURRENCY] ?? Object.values(prices)[0] ?? 0;
     }
 
     private assignAvailability(item: MockDataItem | undefined, configurator: Partial<ConfiguredProduct>): void {
@@ -168,6 +208,8 @@ export class ConfiguratorService {
         volumePrices?: MockVolumePricesConfig[],
     ): void {
         if (!volumePrices) {
+            configurator.volume_prices = null;
+
             return;
         }
 
@@ -185,16 +227,13 @@ export class ConfiguratorService {
     }
 
     private areObjectsEqual(obj1: Record<string, string>, obj2: Record<string, string>): boolean {
-        const sortedKeys1 = Object.keys(obj1).sort();
-        const sortedKeys2 = Object.keys(obj2).sort();
+        const keys1 = Object.keys(obj1);
+        const keys2 = Object.keys(obj2);
 
-        if (
-            sortedKeys1.length !== sortedKeys2.length ||
-            !sortedKeys1.every((key, index) => key === sortedKeys2[index])
-        ) {
+        if (keys1.length !== keys2.length) {
             return false;
         }
 
-        return sortedKeys1.every((key) => obj1[key] === obj2[key]);
+        return keys1.every((key) => obj1[key] === obj2[key]);
     }
 }

@@ -4,10 +4,22 @@ export interface VolumePrices {
     gross_price: number;
 }
 
-export interface MockDataItemDisabled {
+/**
+ * Per-currency prices keyed by ISO currency code (e.g. EUR, CHF, USD).
+ * Values are integer amounts in the currency's minor unit (cents).
+ */
+export type CurrencyPrices = Record<string, number>;
+
+export interface MockDataItemDisabledRule {
     condition: string[];
-    text: string;
+    tooltip: string;
 }
+
+/**
+ * Cross-blocking rules keyed by the group id whose selected value can disable this option.
+ * The option becomes unavailable when the selected value of `<groupId>` is in `condition`.
+ */
+export type MockDataItemDisabled = Record<string, MockDataItemDisabledRule>;
 
 export interface MockAvailabilityQuantity {
     condition: Partial<ProductData>;
@@ -30,7 +42,7 @@ export interface MockVolumePricesConfig {
 export interface MockDataItem {
     value: string;
     title: string;
-    price: number;
+    price: CurrencyPrices;
     disabled?: MockDataItemDisabled;
     availableQuantity?: number | MockAvailabilityQuantity[];
 }
@@ -47,7 +59,7 @@ export interface MockProductInfo {
     name: string;
     image: string;
     logo: string;
-    defaultPrice?: number;
+    defaultPrice?: CurrencyPrices;
 }
 
 export interface MockConfigurator {

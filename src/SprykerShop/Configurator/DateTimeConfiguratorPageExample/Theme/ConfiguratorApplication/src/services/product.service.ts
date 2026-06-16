@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { Observable } from 'rxjs';
+import { EMPTY, Observable, of } from 'rxjs';
 import { catchError, map, shareReplay, switchMap, tap } from 'rxjs/operators';
 import { environment } from '../environments/environment';
 import { ProductData, ProductMetaData } from './types';
@@ -11,10 +11,7 @@ export class ProductService {
     constructor(
         private http: HttpClient,
         private translate: TranslateService,
-    ) {
-        translate.addLangs(['en_US', 'de_DE']);
-        translate.setDefaultLang('en_US');
-    }
+    ) {}
 
     private token = this.getToken();
 
@@ -28,10 +25,18 @@ export class ProductService {
                 : tap(),
             switchMap((response) => {
                 if (!response) {
-                    return;
+                    return EMPTY;
                 }
 
-                return this.translate.use(response.data.locale_name).pipe(map(() => response.data));
+                // Server data may omit the locale; fall back to the configured fallback
+                // language so the loader never requests an "undefined.json" glossary.
+                const locale = response.data.locale_name || this.translate.getFallbackLang();
+
+                if (!locale) {
+                    return of(response.data);
+                }
+
+                return this.translate.use(locale).pipe(map(() => response.data));
             }),
             shareReplay({ bufferSize: 1, refCount: true }),
         );
@@ -47,9 +52,6 @@ export class ProductService {
     }
 
     private getToken(): string {
-        const locationSearchArr = location.search.split('=');
-
-        return locationSearchArr[locationSearchArr.length - 1];
+        return new URLSearchParams(location.search).get('getConfigurationByToken') ?? '';
     }
-    /* tslint:enable */
 }

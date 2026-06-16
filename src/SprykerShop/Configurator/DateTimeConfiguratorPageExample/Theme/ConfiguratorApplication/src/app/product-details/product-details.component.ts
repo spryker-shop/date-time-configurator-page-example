@@ -1,14 +1,18 @@
 import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
+import { AsyncPipe, CurrencyPipe } from '@angular/common';
 import { combineLatest, map } from 'rxjs';
-import { ConfiguratorService } from 'src/services/configurator.service';
+import { TranslatePipe } from '@ngx-translate/core';
+import { ConfiguratorService } from '../../services/configurator.service';
+import { ConfigurePricePipe } from '../../utils/configure-price.pipe';
 import { ProductConfiguratorComponent } from '../product-configurator/product-configurator.component';
 
 @Component({
-    standalone: false,
     selector: 'app-product-details',
     templateUrl: './product-details.component.html',
-    styleUrls: ['./product-details.component.scss'],
+    styleUrl: './product-details.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [AsyncPipe, CurrencyPipe, TranslatePipe, ConfigurePricePipe, ProductConfiguratorComponent],
 })
 export class ProductDetailsComponent {
     constructor(private configuratorService: ConfiguratorService) {}

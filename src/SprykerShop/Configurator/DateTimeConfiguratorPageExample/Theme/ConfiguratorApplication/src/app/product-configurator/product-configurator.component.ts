@@ -1,16 +1,20 @@
-import { ChangeDetectionStrategy, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AsyncPipe, JsonPipe } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
-import { delay, shareReplay, switchMap, takeUntil, tap } from 'rxjs/operators';
-import { ProductService } from 'src/services/product.service';
+import { delay, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { ProductService } from '../../services/product.service';
 import { ConfiguratorService } from '../../services/configurator.service';
+import { ConfiguratorGroupComponent } from '../configurator-group/configurator-group.component';
 
 @Component({
-    standalone: false,
     selector: 'app-product-configurator',
     templateUrl: './product-configurator.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [AsyncPipe, JsonPipe, FormsModule, ConfiguratorGroupComponent],
 })
-export class ProductConfiguratorComponent implements OnInit {
+export class ProductConfiguratorComponent implements OnInit, OnDestroy {
     constructor(
         private productService: ProductService,
         private configuratorService: ConfiguratorService,
@@ -28,18 +32,22 @@ export class ProductConfiguratorComponent implements OnInit {
 
             return this.productService.getMetaData(formData);
         }),
-        shareReplay({ bufferSize: 1, refCount: true }),
     );
 
     destroy$ = new Subject<void>();
     submitForm$ = this.metaData$.pipe(
         takeUntil(this.destroy$),
-        delay(0),
+        delay(50),
         tap(() => this.form.nativeElement.submit()),
     );
 
     ngOnInit(): void {
         this.submitForm$.subscribe();
+    }
+
+    ngOnDestroy(): void {
+        this.destroy$.next();
+        this.destroy$.complete();
     }
 
     onConfigurationChange(value: string, id: string) {
