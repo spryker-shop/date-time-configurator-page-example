@@ -52,6 +52,6 @@ export class ProductService {
     }
 
     private getToken(): string {
-        return new URLSearchParams(location.search).get('getConfigurationByToken') ?? '';
+        return new URLSearchParams(location.search).get('token') ?? '';
     }
 }
