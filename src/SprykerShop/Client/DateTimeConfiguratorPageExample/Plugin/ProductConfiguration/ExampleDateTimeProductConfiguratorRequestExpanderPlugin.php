@@ -13,6 +13,11 @@ use Spryker\Client\ProductConfigurationExtension\Dependency\Plugin\ProductConfig
 
 class ExampleDateTimeProductConfiguratorRequestExpanderPlugin extends AbstractPlugin implements ProductConfiguratorRequestExpanderPluginInterface
 {
+    /**
+     * {@inheritDoc}
+     *
+     * @api
+     */
     public function expand(
         ProductConfiguratorRequestTransfer $productConfiguratorRequestTransfer
     ): ProductConfiguratorRequestTransfer {
