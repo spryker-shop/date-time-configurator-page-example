@@ -54,15 +54,15 @@ class ProductConcreteAvailabilityReader implements ProductConcreteAvailabilityRe
             return null;
         }
 
-        if ($productConfigurationAvailabilityQuantity === null && $productConcreteAvailabilityTransfer) {
+        if ($productConfigurationAvailabilityQuantity === null) {
             return $productConcreteAvailabilityTransfer;
         }
 
-        if ($productConfigurationAvailabilityQuantity !== null && !$productConcreteAvailabilityTransfer) {
+        if (!$productConcreteAvailabilityTransfer) {
             return $this->createProductConcreteAvailabilityTransfer($sku, $productConfigurationAvailabilityQuantity);
         }
 
-        if ($productConcreteAvailabilityTransfer !== null && $productConcreteAvailabilityTransfer->getIsNeverOutOfStock()) {
+        if ($productConcreteAvailabilityTransfer->getIsNeverOutOfStock()) {
             return $this->createProductConcreteAvailabilityTransfer($sku, $productConfigurationAvailabilityQuantity);
         }
 
